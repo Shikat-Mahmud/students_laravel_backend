@@ -17,6 +17,22 @@ class StudentController extends Controller
         ]);
     }
 
+    public function show($id) {
+        $student = Student::find($id);
+
+        if($student == null) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Student not found.'
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $student
+        ]);
+    }
+
     public function store(Request $request) {
         try{
             $validator = Validator::make($request->all(),
