@@ -43,10 +43,9 @@ class StudentController extends Controller
                 $request->all(),
                 [
                     'name' => 'required|string|min:3|max:255',
-                    'email' => 'required|email|max:255',
+                    'email' => 'required|email|max:255|unique:students,email',
                     'phone' => 'nullable|string|min:10',
-                    'address' => 'nullable|string|max:255',
-                    'status' => 'required|in:active,inactive'
+                    'address' => 'nullable|string|max:255'
                 ]
             );
 
@@ -64,7 +63,7 @@ class StudentController extends Controller
             $student->email = $request->email;
             $student->phone = $request->phone;
             $student->address = $request->address;
-            $student->status = $request->status;
+            $student->status = 'active';
 
             $student->save();
 
@@ -72,12 +71,12 @@ class StudentController extends Controller
                 'status' => true,
                 'message' => 'Student added successfully',
                 'data' => $student
-            ]);
+            ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validation failed.',
+                'message' => 'An error occurred.',
                 'errors' => $e->getMessage()
             ], 500);
         }
@@ -101,8 +100,7 @@ class StudentController extends Controller
                     'name' => 'required|string|min:3|max:255',
                     'email' => 'required|email|max:255',
                     'phone' => 'nullable|string|min:10',
-                    'address' => 'nullable|string|max:255',
-                    'status' => 'required|in:active,inactive'
+                    'address' => 'nullable|string|max:255'
                 ]
             );
 
@@ -118,7 +116,7 @@ class StudentController extends Controller
             $student->email = $request->email;
             $student->phone = $request->phone;
             $student->address = $request->address;
-            $student->status = $request->status;
+            $student->status = 'active';
 
             $student->save();
 
@@ -137,18 +135,19 @@ class StudentController extends Controller
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $student = Student::find($id);
 
-        if($student == null) {
+        if ($student == null) {
             return response()->json([
                 'status' => false,
                 'message' => 'Student not found.',
             ]);
-        } 
+        }
 
         $student->delete();
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Student deleted successfully.',
