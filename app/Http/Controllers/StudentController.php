@@ -116,7 +116,7 @@ class StudentController extends Controller
             $student->email = $request->email;
             $student->phone = $request->phone;
             $student->address = $request->address;
-            $student->status = 'active';
+            $student->status = $request->status;
 
             $student->save();
 
